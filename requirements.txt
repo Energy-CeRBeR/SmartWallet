@@ -3,3 +3,4 @@ fastapi[all]
 fastapi-users[sqlalchemy]
 python-dotenv
 sqlalchemy
+aiosqlite
