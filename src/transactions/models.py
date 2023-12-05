@@ -9,7 +9,7 @@ in_category = Table(
     "income category",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("name", String),
+    Column("name", String, nullable=False),
     Column("user_id", Integer, ForeignKey(user.c.id)),
 )
 
@@ -17,7 +17,7 @@ ex_category = Table(
     "expense category",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("name", String),
+    Column("name", String, nullable=False),
     Column("user_id", Integer, ForeignKey(user.c.id)),
 )
 
@@ -27,7 +27,7 @@ income = Table(
     Column("id", Integer, primary_key=True),
     Column("category_id", Integer, ForeignKey(in_category.c.id)),
     Column("card_id", Integer, ForeignKey(card.c.id)),
-    Column("amount", Integer),
+    Column("amount", Integer, nullable=False),
 )
 
 expense = Table(
@@ -36,5 +36,5 @@ expense = Table(
     Column("id", Integer, primary_key=True),
     Column("category_id", Integer, ForeignKey(ex_category.c.id)),
     Column("card_id", Integer, ForeignKey(card.c.id)),
-    Column("amount", Integer),
+    Column("amount", Integer, nullable=False),
 )

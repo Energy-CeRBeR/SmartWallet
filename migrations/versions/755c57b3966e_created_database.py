@@ -1,8 +1,8 @@
 """Created database
 
-Revision ID: 015abdae1b6f
+Revision ID: 755c57b3966e
 Revises: 
-Create Date: 2023-12-05 20:38:08.144349
+Create Date: 2023-12-05 21:49:44.281621
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '015abdae1b6f'
+revision: str = '755c57b3966e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,6 +25,9 @@ def upgrade() -> None:
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_superuser', sa.Boolean(), nullable=False),
+    sa.Column('is_verified', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('type',
@@ -46,14 +49,14 @@ def upgrade() -> None:
     )
     op.create_table('expense category',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('income category',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -62,7 +65,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.Column('card_id', sa.Integer(), nullable=True),
-    sa.Column('amount', sa.Integer(), nullable=True),
+    sa.Column('amount', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['card_id'], ['card.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['expense category.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -71,7 +74,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.Column('card_id', sa.Integer(), nullable=True),
-    sa.Column('amount', sa.Integer(), nullable=True),
+    sa.Column('amount', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['card_id'], ['card.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['income category.id'], ),
     sa.PrimaryKeyConstraint('id')
