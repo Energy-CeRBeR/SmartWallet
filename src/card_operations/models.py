@@ -19,6 +19,6 @@ card = Table(
     Column("type_id", Integer, ForeignKey(type_card.c.id)),
     Column("user_id", Integer, ForeignKey(user.c.id)),
     Column("balance", Integer, nullable=False),
-    Column("incomes", JSON, default=[]),
-    Column("expenses", JSON, default=[]),
+    Column("incomes", JSON, default={}),
+    Column("expenses", JSON, default={}),
 )

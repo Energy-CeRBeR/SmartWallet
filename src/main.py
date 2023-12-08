@@ -7,6 +7,7 @@ from src.auth.models import User
 from src.auth.manager import get_user_manager
 from src.auth.schemas import UserRead, UserCreate
 
+from src.card_operations.routers import router as cards_router
 
 app = FastAPI(
     title="Shoe Store"
@@ -30,3 +31,5 @@ app.include_router(
 )
 
 current_user = fastapi_users.current_user()
+
+app.include_router(cards_router)
