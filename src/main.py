@@ -11,7 +11,7 @@ from src.card_operations.routers import router as cards_router
 from src.transactions.routers import router as transaction_router
 
 app = FastAPI(
-    title="Shoe Store"
+    title="Smart Wallet"
 )
 
 fastapi_users = FastAPIUsers[User, int](

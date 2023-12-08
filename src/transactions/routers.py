@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
 from src.card_operations.models import card, type_card
-from src.transactions.schemas import CreateInCategory, CreateExCategory
+from src.transactions.schemas import CreateInCategory, CreateExCategory, CreateIncome, CreateExpense
 from src.transactions.models import in_category, ex_category, income, expense
 
 router = APIRouter(
@@ -45,3 +45,110 @@ async def add_ex_category(new_ex_category: CreateExCategory, session: AsyncSessi
     await session.commit()
 
     return {"status": "success"}
+
+
+@router.post("/in_categories/delete/")
+async def del_in_category(category_id: int, session: AsyncSession = Depends(get_async_session)):
+    to_delete = delete(in_category).where(in_category.c.id == category_id)
+    await session.execute(to_delete)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/ex_categories/delete/")
+async def del_ex_category(category_id: int, session: AsyncSession = Depends(get_async_session)):
+    to_delete = delete(ex_category).where(ex_category.c.id == category_id)
+    await session.execute(to_delete)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.get("/incomes/")
+async def get_income(card_id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(income).where(income.c.card_id == card_id)
+    result = await session.execute(query)
+    current_card = session.query(card).filter()
+    return result.mappings().all()
+
+
+@router.get("/expenses/")
+async def get_expense(card_id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(expense).where(expense.c.card_id == card_id)
+    result = await session.execute(query)
+
+    return result.mappings().all()
+
+
+@router.post("/incomes/create/")
+async def add_income(new_income: CreateIncome, session: AsyncSession = Depends(get_async_session)):
+    stmt = insert(income).values(**new_income.dict())
+    card_update = update(card).where(card.c.id == new_income.card_id).values(
+        balance=card.c.balance + new_income.amount)
+    await session.execute(stmt)
+    await session.execute(card_update)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/expenses/create/")
+async def add_expense(new_expense: CreateExpense, session: AsyncSession = Depends(get_async_session)):
+    stmt = insert(expense).values(**new_expense.dict())
+    card_update = update(card).where(card.c.id == new_expense.card_id).values(
+        balance=card.c.balance - new_expense.amount)
+    await session.execute(stmt)
+    await session.execute(card_update)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/incomes/delete/")
+async def del_income(income_id: int, session: AsyncSession = Depends(get_async_session)):
+    current_income = select(income).where(income.c.id == income_id)
+    card_update = update(card).where(card.c.id == current_income.c.card_id).values(     # Не обновляется баланс
+        balance=card.c.balance - current_income.c.amount)
+
+    to_delete = delete(income).where(income.c.id == income_id)
+    await session.execute(to_delete)
+    await session.execute(card_update)
+    await session.commit()
+
+    #return current_income.mapping().all()   #????????
+    return {"status": "success"}
+
+
+@router.post("/expenses/delete/")
+async def del_expense(expense_id: int, session: AsyncSession = Depends(get_async_session)):
+    current_expense = select(income).where(expense.c.id == expense_id)
+    card_update = update(card).where(card.c.id == current_expense.c.card_id).values(
+        balance=card.c.balance + expense.c.amount)
+
+    to_delete = delete(expense).where(expense.c.id == expense_id)
+    await session.execute(to_delete)
+    await session.execute(card_update)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/incomes/update/")
+async def edit_income(current_income: CreateIncome, session: AsyncSession = Depends(get_async_session)):
+    new_version = update(income).where(income.c.id == current_income.c.id).values(**current_income.dict())
+    await session.execute(new_version)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/expenses/update/")
+async def edit_expense(current_expense: CreateIncome, session: AsyncSession = Depends(get_async_session)):
+    new_version = update(expense).where(expense.c.id == current_expense.c.id).values(**current_expense.dict())
+    await session.execute(new_version)
+    await session.commit()
+
+    return {"status": "success"}
+
+

@@ -11,3 +11,17 @@ class CreateExCategory(BaseModel):
     id: int
     name: str
     user_id: int
+
+
+class CreateIncome(BaseModel):
+    id: int
+    category_id: int
+    card_id: int
+    amount: int
+
+
+class CreateExpense(BaseModel):
+    id: int
+    category_id: int
+    card_id: int
+    amount: int
