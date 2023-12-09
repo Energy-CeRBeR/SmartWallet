@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
@@ -42,6 +42,15 @@ async def add_card(new_card: CardCreate, session: AsyncSession = Depends(get_asy
 async def del_card(card_id: int, session: AsyncSession = Depends(get_async_session)):
     to_delete = delete(card).where(card.c.id == card_id)
     await session.execute(to_delete)
+    await session.commit()
+
+    return {"status": "success"}
+
+
+@router.post("/update/")
+async def update_card(current_card: CardCreate, session: AsyncSession = Depends(get_async_session)):
+    new_version = update(card).where(card.c.id == current_card.id).values(**current_card.dict())
+    await session.execute(new_version)
     await session.commit()
 
     return {"status": "success"}

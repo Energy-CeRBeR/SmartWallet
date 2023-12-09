@@ -1,6 +1,7 @@
-alembic
-fastapi[all]
+alembic~=1.13.0
+fastapi[all]~=0.104.1
 fastapi-users[sqlalchemy]
 python-dotenv
-sqlalchemy
+sqlalchemy~=2.0.23
 aiosqlite
+pydantic~=2.5.2

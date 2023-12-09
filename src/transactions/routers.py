@@ -69,7 +69,7 @@ async def del_ex_category(category_id: int, session: AsyncSession = Depends(get_
 async def get_income(card_id: int, session: AsyncSession = Depends(get_async_session)):
     query = select(income).where(income.c.card_id == card_id)
     result = await session.execute(query)
-    current_card = session.query(card).filter()
+
     return result.mappings().all()
 
 
@@ -107,24 +107,25 @@ async def add_expense(new_expense: CreateExpense, session: AsyncSession = Depend
 
 @router.post("/incomes/delete/")
 async def del_income(income_id: int, session: AsyncSession = Depends(get_async_session)):
-    current_income = select(income).where(income.c.id == income_id)
-    card_update = update(card).where(card.c.id == current_income.c.card_id).values(     # Не обновляется баланс
-        balance=card.c.balance - current_income.c.amount)
+    card_id = await session.execute(select(income.c.card_id).where(income.c.id == income_id))
+    amount = await session.execute(select(income.c.amount).where(income.c.id == income_id))
+    card_update = update(card).where(card.c.id == card_id.scalar()).values(
+        balance=card.c.balance - amount.scalar())
 
     to_delete = delete(income).where(income.c.id == income_id)
     await session.execute(to_delete)
     await session.execute(card_update)
     await session.commit()
 
-    #return current_income.mapping().all()   #????????
     return {"status": "success"}
 
 
 @router.post("/expenses/delete/")
 async def del_expense(expense_id: int, session: AsyncSession = Depends(get_async_session)):
-    current_expense = select(income).where(expense.c.id == expense_id)
-    card_update = update(card).where(card.c.id == current_expense.c.card_id).values(
-        balance=card.c.balance + expense.c.amount)
+    card_id = await session.execute(select(expense.c.card_id).where(expense.c.id == expense_id))
+    amount = await session.execute(select(expense.c.amount).where(expense.c.id == expense_id))
+    card_update = update(card).where(card.c.id == card_id.scalar()).values(
+        balance=card.c.balance + amount.scalar())
 
     to_delete = delete(expense).where(expense.c.id == expense_id)
     await session.execute(to_delete)
@@ -136,7 +137,7 @@ async def del_expense(expense_id: int, session: AsyncSession = Depends(get_async
 
 @router.post("/incomes/update/")
 async def edit_income(current_income: CreateIncome, session: AsyncSession = Depends(get_async_session)):
-    new_version = update(income).where(income.c.id == current_income.c.id).values(**current_income.dict())
+    new_version = update(income).where(income.c.id == current_income.id).values(**current_income.dict())
     await session.execute(new_version)
     await session.commit()
 
@@ -145,7 +146,7 @@ async def edit_income(current_income: CreateIncome, session: AsyncSession = Depe
 
 @router.post("/expenses/update/")
 async def edit_expense(current_expense: CreateIncome, session: AsyncSession = Depends(get_async_session)):
-    new_version = update(expense).where(expense.c.id == current_expense.c.id).values(**current_expense.dict())
+    new_version = update(expense).where(expense.c.id == current_expense.id).values(**current_expense.dict())
     await session.execute(new_version)
     await session.commit()
 

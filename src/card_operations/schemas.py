@@ -12,5 +12,3 @@ class CardCreate(BaseModel):
     type_id: int
     user_id: int
     balance: int
-    incomes: dict
-    expenses: dict

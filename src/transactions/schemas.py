@@ -18,6 +18,7 @@ class CreateIncome(BaseModel):
     category_id: int
     card_id: int
     amount: int
+    description: str
 
 
 class CreateExpense(BaseModel):
@@ -25,3 +26,4 @@ class CreateExpense(BaseModel):
     category_id: int
     card_id: int
     amount: int
+    description: str
