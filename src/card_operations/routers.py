@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
 from src.card_operations.models import card, type_card
-from src.card_operations.schemas import TypeCreate, CardCreate
+from src.card_operations.schemas import TypeCreate, CardCreate, CardUpdate
 
 router = APIRouter(
     prefix="/cards",
@@ -38,7 +38,7 @@ async def add_card(new_card: CardCreate, session: AsyncSession = Depends(get_asy
     return {"status": "success"}
 
 
-@router.post("/delete/")
+@router.delete("/")
 async def del_card(card_id: int, session: AsyncSession = Depends(get_async_session)):
     to_delete = delete(card).where(card.c.id == card_id)
     await session.execute(to_delete)
@@ -47,8 +47,8 @@ async def del_card(card_id: int, session: AsyncSession = Depends(get_async_sessi
     return {"status": "success"}
 
 
-@router.post("/update/")
-async def update_card(current_card: CardCreate, session: AsyncSession = Depends(get_async_session)):
+@router.put("/")
+async def update_card(current_card: CardUpdate, session: AsyncSession = Depends(get_async_session)):
     new_version = update(card).where(card.c.id == current_card.id).values(**current_card.dict())
     await session.execute(new_version)
     await session.commit()

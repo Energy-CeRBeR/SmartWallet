@@ -23,3 +23,19 @@ class CreateExpense(BaseModel):
     card_id: int
     amount: int
     description: str
+
+
+class UpdateIncome(BaseModel):
+    id: int
+    category_id: int
+    card_id: int
+    amount: int
+    description: str
+
+
+class UpdateExpense(BaseModel):
+    id: int
+    category_id: int
+    card_id: int
+    amount: int
+    description: str
