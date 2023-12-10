@@ -14,16 +14,16 @@ router = APIRouter(
 
 
 @router.get("/in_categories/")
-async def get_in_category(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(in_category).where(in_category.c.user_id == id)
+async def get_in_category(user_id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(in_category).where(in_category.c.user_id == user_id)
     result = await session.execute(query)
 
     return result.mappings().all()
 
 
 @router.get("/ex_categories/")
-async def get_ex_category(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(ex_category).where(ex_category.c.user_id == id)
+async def get_ex_category(user_id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(ex_category).where(ex_category.c.user_id == user_id)
     result = await session.execute(query)
 
     return result.mappings().all()

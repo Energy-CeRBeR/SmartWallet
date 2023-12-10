@@ -9,6 +9,7 @@ from src.auth.schemas import UserRead, UserCreate
 
 from src.card_operations.routers import router as cards_router
 from src.transactions.routers import router as transaction_router
+from src.statistic.routers import router as statistic_router
 
 app = FastAPI(
     title="Smart Wallet"
@@ -35,3 +36,4 @@ current_user = fastapi_users.current_user()
 
 app.include_router(cards_router)
 app.include_router(transaction_router)
+app.include_router(statistic_router)
