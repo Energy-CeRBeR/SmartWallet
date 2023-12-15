@@ -1,10 +1,9 @@
-from sqlalchemy import Column, Integer, String, Table, DateTime, MetaData, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, DateTime, ForeignKey
 from datetime import datetime
 
 from src.card_operations.models import card
 from src.auth.models import user
-
-metadata = MetaData()
+from src.database import metadata
 
 in_category = Table(
     "income category",

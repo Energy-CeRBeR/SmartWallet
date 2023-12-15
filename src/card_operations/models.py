@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, Table, MetaData, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Table, ForeignKey
 
 from src.auth.models import user
-
-metadata = MetaData()
+from src.database import metadata
 
 type_card = Table(
     "type",

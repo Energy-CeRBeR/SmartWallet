@@ -1,9 +1,7 @@
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Column, Integer, String, Table, MetaData, Boolean
+from sqlalchemy import Column, Integer, String, Table, Boolean
 
-from src.database import Base
-
-metadata = MetaData()
+from src.database import Base, metadata
 
 user = Table(
     "user",
@@ -18,6 +16,7 @@ user = Table(
     Column("is_verified", Boolean, default=False, nullable=False),
 )
 
+
 class User(SQLAlchemyBaseUserTable[int], Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False)
@@ -27,6 +26,3 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_active: bool = Column(Boolean, default=True, nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
     is_verified: bool = Column(Boolean, default=False, nullable=False)
-
-
-
