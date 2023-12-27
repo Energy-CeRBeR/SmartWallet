@@ -15,8 +15,8 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_card(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(card).where(card.c.user_id == id)
+async def get_card(user=Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    query = select(card).where(card.c.user_id == user.id)
     result = await session.execute(query)
 
     return result.mappings().all()
@@ -25,6 +25,7 @@ async def get_card(id: int, session: AsyncSession = Depends(get_async_session)):
 @router.post("/type/")
 async def add_type(new_type: TypeCreate, session: AsyncSession = Depends(get_async_session)):
     stmt = insert(type_card).values(**new_type.dict())
+
     await session.execute(stmt)
     await session.commit()
 
@@ -32,8 +33,11 @@ async def add_type(new_type: TypeCreate, session: AsyncSession = Depends(get_asy
 
 
 @router.post("/")
-async def add_card(new_card: CardCreate, session: AsyncSession = Depends(get_async_session)):
-    stmt = insert(card).values(**new_card.dict())
+async def add_card(new_card: CardCreate, user=Depends(current_user),
+                   session: AsyncSession = Depends(get_async_session)):
+    new_card = new_card.dict()
+    new_card["user_id"] = user.id
+    stmt = insert(card).values(**new_card)
     await session.execute(stmt)
     await session.commit()
 
@@ -41,8 +45,8 @@ async def add_card(new_card: CardCreate, session: AsyncSession = Depends(get_asy
 
 
 @router.delete("/")
-async def del_card(card_id: int, session: AsyncSession = Depends(get_async_session)):
-    to_delete = delete(card).where(card.c.id == card_id)
+async def del_card(card_id: int, user=Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    to_delete = delete(card).where(card.c.id == card_id and card.c.user_id == user.id)
     await session.execute(to_delete)
     await session.commit()
 
@@ -50,8 +54,10 @@ async def del_card(card_id: int, session: AsyncSession = Depends(get_async_sessi
 
 
 @router.put("/")
-async def update_card(current_card: CardUpdate, session: AsyncSession = Depends(get_async_session)):
-    new_version = update(card).where(card.c.id == current_card.id).values(**current_card.dict())
+async def update_card(current_card: CardUpdate, user=Depends(current_user),
+                      session: AsyncSession = Depends(get_async_session)):
+    new_version = update(card).where(card.c.id == current_card.id
+                                     and card.c.user_id == user.id).values(**current_card.dict())
     await session.execute(new_version)
     await session.commit()
 

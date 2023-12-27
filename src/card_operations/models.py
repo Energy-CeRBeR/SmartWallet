@@ -1,7 +1,10 @@
+from fastapi import Depends
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
 
 from src.auth.models import user
 from src.database import metadata
+from src.auth.base_config import current_user
+
 
 type_card = Table(
     "type",
