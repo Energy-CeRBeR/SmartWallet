@@ -15,6 +15,3 @@ def test_register():
 
     assert response.status_code == 201
 
-
-def temp_test():
-    ...

@@ -5,10 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import get_async_session
 from src.card_operations.models import card, type_card
 from src.card_operations.schemas import TypeCreate, CardCreate, CardUpdate
+from src.auth.base_config import current_user
 
 router = APIRouter(
     prefix="/cards",
-    tags=["cards"]
+    tags=["cards"],
+    dependencies=[Depends(current_user)]
 )
 
 

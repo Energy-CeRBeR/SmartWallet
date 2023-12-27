@@ -4,12 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
 from src.card_operations.models import card, type_card
+from src.auth.base_config import current_user
 from src.transactions.schemas import CreateInCategory, CreateExCategory, CreateIncome, CreateExpense
 from src.transactions.models import in_category, ex_category, income, expense
 
 router = APIRouter(
     prefix="/statistic",
-    tags=["statistic"]
+    tags=["statistic"],
+    dependencies=[Depends(current_user)]
 )
 
 

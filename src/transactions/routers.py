@@ -7,10 +7,12 @@ from src.card_operations.models import card
 from src.transactions.schemas import (CreateInCategory, CreateExCategory, CreateIncome, CreateExpense,
                                       UpdateIncome, UpdateExpense)
 from src.transactions.models import in_category, ex_category, income, expense
+from src.auth.base_config import current_user
 
 router = APIRouter(
     prefix="/transactions",
-    tags=["transactions"]
+    tags=["transactions"],
+    dependencies=[Depends(current_user)]
 )
 
 
