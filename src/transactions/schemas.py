@@ -3,12 +3,10 @@ from pydantic import BaseModel
 
 class CreateInCategory(BaseModel):
     name: str
-    user_id: int
 
 
 class CreateExCategory(BaseModel):
     name: str
-    user_id: int
 
 
 class CreateIncome(BaseModel):

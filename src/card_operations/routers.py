@@ -46,7 +46,7 @@ async def add_card(new_card: CardCreate, user=Depends(current_user),
 
 @router.delete("/")
 async def del_card(card_id: int, user=Depends(current_user), session: AsyncSession = Depends(get_async_session)):
-    to_delete = delete(card).where(card.c.id == card_id and card.c.user_id == user.id)
+    to_delete = delete(card).where((card.c.id == card_id) & (card.c.user_id == user.id))
     await session.execute(to_delete)
     await session.commit()
 
@@ -57,7 +57,7 @@ async def del_card(card_id: int, user=Depends(current_user), session: AsyncSessi
 async def update_card(current_card: CardUpdate, user=Depends(current_user),
                       session: AsyncSession = Depends(get_async_session)):
     new_version = update(card).where(card.c.id == current_card.id
-                                     and card.c.user_id == user.id).values(**current_card.dict())
+                                     & card.c.user_id == user.id).values(**current_card.dict())
     await session.execute(new_version)
     await session.commit()
 

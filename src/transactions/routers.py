@@ -17,24 +17,27 @@ router = APIRouter(
 
 
 @router.get("/in_categories/")
-async def get_in_category(user_id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(in_category).where(in_category.c.user_id == user_id)
+async def get_in_category(user=Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    query = select(in_category).where(in_category.c.user_id == user.id)
     result = await session.execute(query)
 
     return result.mappings().all()
 
 
 @router.get("/ex_categories/")
-async def get_ex_category(user_id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(ex_category).where(ex_category.c.user_id == user_id)
+async def get_ex_category(user=Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    query = select(ex_category).where(ex_category.c.user_id == user.id)
     result = await session.execute(query)
 
     return result.mappings().all()
 
 
 @router.post("/in_categories/")
-async def add_in_category(new_in_category: CreateInCategory, session: AsyncSession = Depends(get_async_session)):
-    stmt = insert(in_category).values(**new_in_category.dict())
+async def add_in_category(new_in_category: CreateInCategory, user=Depends(current_user),
+                          session: AsyncSession = Depends(get_async_session)):
+    new_in_category = new_in_category.dict()
+    new_in_category["user_id"] = user.id
+    stmt = insert(in_category).values(**new_in_category)
     await session.execute(stmt)
     await session.commit()
 
@@ -42,8 +45,11 @@ async def add_in_category(new_in_category: CreateInCategory, session: AsyncSessi
 
 
 @router.post("/ex_categories/")
-async def add_ex_category(new_ex_category: CreateExCategory, session: AsyncSession = Depends(get_async_session)):
-    stmt = insert(ex_category).values(**new_ex_category.dict())
+async def add_ex_category(new_ex_category: CreateExCategory, user=Depends(current_user),
+                          session: AsyncSession = Depends(get_async_session)):
+    new_ex_category = new_ex_category.dict()
+    new_ex_category["user_id"] = user.id
+    stmt = insert(ex_category).values(**new_ex_category)
     await session.execute(stmt)
     await session.commit()
 
@@ -51,8 +57,9 @@ async def add_ex_category(new_ex_category: CreateExCategory, session: AsyncSessi
 
 
 @router.delete("/in_categories/")
-async def del_in_category(category_id: int, session: AsyncSession = Depends(get_async_session)):
-    to_delete = delete(in_category).where(in_category.c.id == category_id)
+async def del_in_category(category_id: int, user=Depends(current_user),
+                          session: AsyncSession = Depends(get_async_session)):
+    to_delete = delete(in_category).where(in_category.c.id == category_id & in_category.c.user_id == user.id)
     await session.execute(to_delete)
     await session.commit()
 
@@ -60,8 +67,9 @@ async def del_in_category(category_id: int, session: AsyncSession = Depends(get_
 
 
 @router.delete("/ex_categories/")
-async def del_ex_category(category_id: int, session: AsyncSession = Depends(get_async_session)):
-    to_delete = delete(ex_category).where(ex_category.c.id == category_id)
+async def del_ex_category(category_id: int, user=Depends(current_user),
+                          session: AsyncSession = Depends(get_async_session)):
+    to_delete = delete(ex_category).where(ex_category.c.id == category_id & ex_category.c.user_id == user.id)
     await session.execute(to_delete)
     await session.commit()
 
@@ -69,16 +77,18 @@ async def del_ex_category(category_id: int, session: AsyncSession = Depends(get_
 
 
 @router.get("/incomes/")
-async def get_income(card_id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(income).where(income.c.card_id == card_id)
+async def get_income(card_id: int, user=Depends(current_user),
+                     session: AsyncSession = Depends(get_async_session)):
+    query = select(income).where(income.c.card_id == card_id & income.c.user_id == user.id)
     result = await session.execute(query)
 
     return result.mappings().all()
 
 
 @router.get("/expenses/")
-async def get_expense(card_id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(expense).where(expense.c.card_id == card_id)
+async def get_expense(card_id: int, user=Depends(current_user),
+                      session: AsyncSession = Depends(get_async_session)):
+    query = select(expense).where(expense.c.card_id == card_id & expense.c.user_id == user.id)
     result = await session.execute(query)
 
     return result.mappings().all()
