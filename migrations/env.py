@@ -11,10 +11,9 @@ import os
 import sys
 sys.path.append(os.path.join(sys.path[0], "src"))
 
-from src.auth.models import *
+
 from src.database import metadata
-from src.card_operations.models import *
-from src.transactions.models import *
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

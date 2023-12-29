@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, DateTime, Float, ForeignKey
 from datetime import datetime
 
 from src.card_operations.models import card
@@ -27,7 +27,7 @@ income = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("category_id", Integer, ForeignKey(in_category.c.id)),
     Column("card_id", Integer, ForeignKey(card.c.id)),
-    Column("amount", Integer, nullable=False),
+    Column("amount", Float, nullable=False),
     Column("description", String),
     Column("date", DateTime, default=datetime.now()),
 )
@@ -38,7 +38,7 @@ expense = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("category_id", Integer, ForeignKey(ex_category.c.id)),
     Column("card_id", Integer, ForeignKey(card.c.id)),
-    Column("amount", Integer, nullable=False),
+    Column("amount", Float, nullable=False),
     Column("description", String),
     Column("date", DateTime, default=datetime.now()),
 )

@@ -12,14 +12,14 @@ class CreateExCategory(BaseModel):
 class CreateIncome(BaseModel):
     category_id: int
     card_id: int
-    amount: int
+    amount: float
     description: str
 
 
 class CreateExpense(BaseModel):
     category_id: int
     card_id: int
-    amount: int
+    amount: float
     description: str
 
 
@@ -27,7 +27,7 @@ class UpdateIncome(BaseModel):
     id: int
     category_id: int
     card_id: int
-    amount: int
+    amount: float
     description: str
 
 
@@ -35,5 +35,5 @@ class UpdateExpense(BaseModel):
     id: int
     category_id: int
     card_id: int
-    amount: int
+    amount: float
     description: str

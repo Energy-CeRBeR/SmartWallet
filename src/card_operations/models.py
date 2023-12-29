@@ -1,9 +1,7 @@
-from fastapi import Depends
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, Float
 
 from src.auth.models import user
 from src.database import metadata
-from src.auth.base_config import current_user
 
 
 type_card = Table(
@@ -20,5 +18,5 @@ card = Table(
     Column("name", String, nullable=False),
     Column("type_id", Integer, ForeignKey(type_card.c.id)),
     Column("user_id", Integer, ForeignKey(user.c.id)),
-    Column("balance", Integer, nullable=False),
+    Column("balance", Float, nullable=False),
 )
