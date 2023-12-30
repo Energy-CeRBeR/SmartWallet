@@ -67,3 +67,7 @@ async def update_card(current_card: CardUpdate, user=Depends(current_user),
         return {"status": "success"}
     else:
         return {"status": "Отказано в доступе"}
+
+
+
+

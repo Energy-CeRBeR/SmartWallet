@@ -8,6 +8,7 @@ from src.auth.utils import get_user_db
 
 SECRET = "SECRET"
 
+
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
