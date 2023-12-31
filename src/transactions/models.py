@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Table, DateTime, Float, ForeignKey
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, Table, Date, Float, ForeignKey
+from datetime import date
 
 from src.card_operations.models import card
 from src.auth.models import user
@@ -29,7 +29,7 @@ income = Table(
     Column("card_id", Integer, ForeignKey(card.c.id)),
     Column("amount", Float, nullable=False),
     Column("description", String),
-    Column("date", DateTime, default=datetime.now()),
+    Column("date", Date, default=date.today()),
 )
 
 expense = Table(
@@ -40,5 +40,5 @@ expense = Table(
     Column("card_id", Integer, ForeignKey(card.c.id)),
     Column("amount", Float, nullable=False),
     Column("description", String),
-    Column("date", DateTime, default=datetime.now()),
+    Column("date", Date, default=date.today()),
 )

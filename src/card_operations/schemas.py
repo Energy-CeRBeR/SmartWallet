@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class CardCreate(BaseModel):
     name: str
     type_id: int
-    balance: float
+    balance: int
 
 
 class CardUpdate(BaseModel):
