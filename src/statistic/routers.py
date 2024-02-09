@@ -61,7 +61,6 @@ async def get_all_incomes(user=Depends(current_user), session: AsyncSession = De
     card_id_tuple = list(map(lambda x: int(x[0]), (await session.execute(select(card.c.id).
                                                                          where((card.c.user_id == user.id)
                                                                                & (card.c.type_id == 1)))).all()))
-    print(card_id_tuple)
     income_amounts = await session.execute(select(income.c.amount).where(income.c.card_id.in_(card_id_tuple)))
     total_income = 0
     for elem in income_amounts.mappings().all():
@@ -75,7 +74,6 @@ async def get_all_expenses(user=Depends(current_user), session: AsyncSession = D
     card_id_tuple = list(map(lambda x: int(x[0]), (await session.execute(select(card.c.id).
                                                                          where((card.c.user_id == user.id)
                                                                                & (card.c.type_id == 1)))).all()))
-    print(card_id_tuple)
     expense_amounts = await session.execute(select(expense.c.amount).where(expense.c.card_id.in_(card_id_tuple)))
     total_expense = 0
     for elem in expense_amounts.mappings().all():

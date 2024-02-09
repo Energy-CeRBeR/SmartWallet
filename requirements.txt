@@ -9,3 +9,4 @@ redis~=4.6.0
 pytest
 fastapi-cache2[redis]
 httpx
+environs
