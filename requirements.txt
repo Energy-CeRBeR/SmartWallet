@@ -1,6 +1,7 @@
 alembic~=1.13.0
 fastapi[all]~=0.104.1
 fastapi-users[sqlalchemy]
+pyjwt[crypto]~=2.8.0
 python-dotenv
 sqlalchemy~=2.0.23
 aiosqlite
@@ -9,4 +10,5 @@ redis~=4.6.0
 pytest
 fastapi-cache2[redis]
 httpx
-environs
+environs~=11.0.0
+bcrypt~=4.1.1
